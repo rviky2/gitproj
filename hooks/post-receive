@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Git Hook: Post-Receive
+# Place this file in: /home/yourdomain.com/public_html/.git/hooks/post-receive
+# Make it executable: chmod +x post-receive
+
+# This hook automatically deploys changes when you push to the repository
+
+set -e
+
+# Configuration
+TARGET="/home/yourdomain.com/public_html"
+GIT_DIR="$TARGET/.git"
+WORK_TREE="$TARGET"
+
+# Colors
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+echo -e "${GREEN}================================${NC}"
+echo -e "${GREEN}Starting Auto-Deployment...${NC}"
+echo -e "${GREEN}================================${NC}"
+
+# Checkout the latest code
+git --work-tree="$WORK_TREE" --git-dir="$GIT_DIR" checkout -f
+
+# Set permissions
+find "$WORK_TREE" -type f -exec chmod 644 {} \;
+find "$WORK_TREE" -type d -exec chmod 755 {} \;
+
+echo -e "${GREEN}================================${NC}"
+echo -e "${GREEN}✅ Deployment Complete!${NC}"
+echo -e "${GREEN}================================${NC}"
+
+exit 0
